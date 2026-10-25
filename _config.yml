@@ -1,0 +1,20 @@
+title: AV-Travel
+description: Our Mediterranean trip, day by day
+url: "https://travel.amvhome.net"
+baseurl: ""
+
+# Each day lives at /<slug>/, e.g. /day-03-colosseum-and-forum/
+permalink: /:title/
+
+# Posts dated in the future are NOT published (handy for posting days late).
+future: false
+
+trip:
+  name: Mediterranean 2027
+  summary: "Rome, Athens, Venice, Azamara cruises and Barcelona, 27 April to 30 May 2027."
+
+# Paste the src URL from Polarsteps' embed code here (leave blank to hide the map).
+polarsteps_embed_url: ""
+
+exclude:
+  - README.md

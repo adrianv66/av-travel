@@ -1,0 +1,33 @@
+---
+layout: default
+---
+<section class="intro">
+  <h1>{{ site.trip.name }}</h1>
+  <p>{{ site.trip.summary }}</p>
+</section>
+
+{% if site.polarsteps_embed_url != "" %}
+<section class="trip-map">
+  <h2>The whole route</h2>
+  <iframe src="{{ site.polarsteps_embed_url }}" loading="lazy" title="Trip route on Polarsteps"></iframe>
+</section>
+{% endif %}
+
+<section>
+  <h2>Day by day</h2>
+  {% if site.posts.size > 0 %}
+  <ul class="day-list">
+    {% for post in site.posts reversed %}
+    <li>
+      <a href="{{ post.url | relative_url }}">
+        <span class="day-date">{{ post.date | date: "%a %-d %b" }}</span>
+        <span class="day-title">{{ post.title }}</span>
+        {% if post.place %}<span class="day-place">{{ post.place }}</span>{% endif %}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty">Nothing posted yet. The first day goes up once we're on the road.</p>
+  {% endif %}
+</section>

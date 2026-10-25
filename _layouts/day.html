@@ -1,0 +1,59 @@
+---
+layout: default
+---
+<article class="day">
+  <p class="day-meta">
+    {{ page.date | date: "%A %-d %B %Y" }}{% if page.place %} · {{ page.place }}{% endif %}
+  </p>
+  <h1>{{ page.title }}</h1>
+
+  {% if page.stops %}
+  <div id="day-map" class="day-map" aria-label="Map of the day's stops"></div>
+
+  <ol class="stops">
+    {% for stop in page.stops %}
+    <li>
+      {% if stop.time %}<span class="stop-time">{{ stop.time }}</span>{% endif %}
+      <strong>{{ stop.name }}</strong>
+      {% if stop.note %}<span class="stop-note">{{ stop.note }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+
+  <script>
+    (function () {
+      var stops = {{ page.stops | jsonify }};
+      var map = L.map('day-map', { scrollWheelZoom: false });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      var points = [];
+      stops.forEach(function (s, i) {
+        var ll = [s.lat, s.lng];
+        points.push(ll);
+        L.marker(ll, {
+          icon: L.divIcon({ className: 'stop-pin', html: String(i + 1), iconSize: [26, 26] })
+        }).addTo(map).bindPopup('<strong>' + s.name + '</strong>' + (s.time ? '<br>' + s.time : ''));
+      });
+
+      if (points.length > 1) {
+        L.polyline(points, { color: '#c2562b', weight: 3, dashArray: '6 6' }).addTo(map);
+        map.fitBounds(points, { padding: [30, 30] });
+      } else {
+        map.setView(points[0], 15);
+      }
+    })();
+  </script>
+  {% endif %}
+
+  <div class="day-body">
+    {{ content }}
+  </div>
+
+  <nav class="day-nav">
+    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}">← {{ page.previous.title }}</a>{% else %}<span></span>{% endif %}
+    {% if page.next %}<a href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>{% endif %}
+  </nav>
+</article>
