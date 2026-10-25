@@ -4,18 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
+  <meta name="description" content="{{ page.summary | default: page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-  {% if page.stops %}
+  {% if page.stops or page.collection == "trips" %}
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ '/assets/map.js' | relative_url }}"></script>
   {% endif %}
 </head>
 <body>
   <header class="site-header">
     <div class="wrap">
       <a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
-      <span class="tagline">{{ site.description }}</span>
+      <nav class="site-nav">
+        <a href="{{ '/#trips' | relative_url }}">Trips</a>
+        <a href="{{ '/blog/' | relative_url }}">Blog</a>
+      </nav>
     </div>
   </header>
 
@@ -24,7 +28,7 @@
   </main>
 
   <footer class="wrap site-footer">
-    <p>{{ site.trip.name }} · Maps © OpenStreetMap contributors</p>
+    <p>{{ site.title }} · Maps © OpenStreetMap contributors</p>
   </footer>
 </body>
 </html>

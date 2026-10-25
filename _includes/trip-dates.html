@@ -1,0 +1,8 @@
+{%- assign _t = include.trip -%}
+{%- if _t.start and _t.end -%}
+{%- assign _sy = _t.start | date: "%Y" -%}
+{%- assign _ey = _t.end | date: "%Y" -%}
+{{ _t.start | date: "%-d %b" }}{% if _sy != _ey %} {{ _sy }}{% endif %} – {{ _t.end | date: "%-d %b %Y" }}
+{%- elsif _t.start -%}
+From {{ _t.start | date: "%-d %b %Y" }}
+{%- endif -%}

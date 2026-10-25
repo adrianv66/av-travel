@@ -1,7 +1,17 @@
 ---
 layout: default
 ---
+{%- assign trip_slug = page.categories | first -%}
+{%- assign trip = site.trips | where: "slug", trip_slug | first -%}
+{%- assign trip_days = site.categories[trip_slug] | reverse -%}
+{%- assign idx = -1 -%}{%- assign prev_day = nil -%}{%- assign next_day = nil -%}
+{%- for d in trip_days -%}{%- if d.url == page.url -%}{%- assign idx = forloop.index0 -%}{%- endif -%}{%- endfor -%}
+{%- if idx > 0 -%}{%- assign prev_i = idx | minus: 1 -%}{%- assign prev_day = trip_days[prev_i] -%}{%- endif -%}
+{%- assign next_i = idx | plus: 1 -%}
+{%- if idx >= 0 and next_i < trip_days.size -%}{%- assign next_day = trip_days[next_i] -%}{%- endif -%}
+
 <article class="day">
+  {% if trip %}<p class="crumbs"><a href="{{ trip.url | relative_url }}">← {{ trip.title }}</a></p>{% endif %}
   <p class="day-meta">
     {{ page.date | date: "%A %-d %B %Y" }}{% if page.place %} · {{ page.place }}{% endif %}
   </p>
@@ -23,27 +33,12 @@ layout: default
   <script>
     (function () {
       var stops = {{ page.stops | jsonify }};
-      var map = L.map('day-map', { scrollWheelZoom: false });
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
-
-      var points = [];
-      stops.forEach(function (s, i) {
-        var ll = [s.lat, s.lng];
-        points.push(ll);
-        L.marker(ll, {
-          icon: L.divIcon({ className: 'stop-pin', html: String(i + 1), iconSize: [26, 26] })
-        }).addTo(map).bindPopup('<strong>' + s.name + '</strong>' + (s.time ? '<br>' + s.time : ''));
-      });
-
-      if (points.length > 1) {
-        L.polyline(points, { color: '#c2562b', weight: 3, dashArray: '6 6' }).addTo(map);
-        map.fitBounds(points, { padding: [30, 30] });
-      } else {
-        map.setView(points[0], 15);
-      }
+      avMap('day-map', stops.map(function (s, i) {
+        return {
+          lat: s.lat, lng: s.lng, label: i + 1,
+          popup: '<strong>' + avEscape(s.name) + '</strong>' + (s.time ? '<br>' + avEscape(s.time) : '')
+        };
+      }));
     })();
   </script>
   {% endif %}
@@ -53,7 +48,7 @@ layout: default
   </div>
 
   <nav class="day-nav">
-    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}">← {{ page.previous.title }}</a>{% else %}<span></span>{% endif %}
-    {% if page.next %}<a href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>{% endif %}
+    {% if prev_day %}<a href="{{ prev_day.url | relative_url }}">← {{ prev_day.title }}</a>{% else %}<span></span>{% endif %}
+    {% if next_day %}<a href="{{ next_day.url | relative_url }}">{{ next_day.title }} →</a>{% endif %}
   </nav>
 </article>

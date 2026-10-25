@@ -1,0 +1,8 @@
+{%- comment -%} Shows Upcoming / On the road / Past for the trip passed in include.trip {%- endcomment -%}
+{%- assign _now = site.time | date: "%Y%m%d" | plus: 0 -%}
+{%- assign _start = include.trip.start | date: "%Y%m%d" | plus: 0 -%}
+{%- assign _end = include.trip.end | date: "%Y%m%d" | plus: 0 -%}
+{%- if _now < _start -%}<span class="status status-upcoming">Upcoming</span>
+{%- elsif _now <= _end -%}<span class="status status-live">On the road</span>
+{%- else -%}<span class="status status-past">Past trip</span>
+{%- endif -%}

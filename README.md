@@ -1,38 +1,61 @@
 # AV-Travel
 
-Trip journal for travel.amvhome.net, built with Jekyll on GitHub Pages.
+Trips and travel blog at https://travel.amvhome.net, built with Jekyll on GitHub Pages (repo `adrianv66/av-travel`).
 
-## One-time setup
+## How it's laid out
 
-1. On your **personal** GitHub account, create a new public repo (e.g. `av-travel`) and push this folder to it.
-2. Repo **Settings → Pages**: Source = "Deploy from a branch", branch = `main`, folder = `/ (root)`.
-3. Same page, **Custom domain**: enter `travel.amvhome.net` and save.
-4. In **GoDaddy → DNS** for amvhome.net, add one record (leave the email records alone):
-   - Type: `CNAME`, Name: `travel`, Value: `<your-github-username>.github.io`
-5. Once the certificate is issued, tick **Enforce HTTPS** on the Pages settings page.
+| What | Where it lives | Address on the site |
+|---|---|---|
+| Front page (trips + latest blog posts) | `index.html` | `/` |
+| A trip | `_trips/<trip>.md` | `/<trip>/` |
+| A day of a trip | `<trip>/_posts/YYYY-MM-DD-day-NN-title.md` | `/<trip>/day-NN-title/` |
+| A blog post | `blog/_posts/YYYY-MM-DD-title.md` | `/blog/title/` |
+| Photos | `images/<trip>/` or `images/blog/` | `/images/...` |
 
-## Polarsteps map
+## Adding a trip
 
-In Polarsteps, open your public trip, choose the embed option, and copy the `src="..."` URL from the code.
-Paste it into `polarsteps_embed_url` in `_config.yml`. Leave it blank to hide the map.
+Copy `_trips/mediterranean-2027.md` to a new name, e.g. `_trips/japan-2028.md`, and change the title, `start`, `end`
+and `summary`. The file name becomes the trip's address. Its days go in a folder with the same name: `japan-2028/_posts/`
+(the day script creates it for you).
+
+Optional in the trip file:
+- `cover:` a photo for the card on the front page, e.g. `/images/japan-2028/cover.jpg`
+- `polarsteps_embed_url:` the `src` URL from Polarsteps' embed code. If it's blank, the trip page draws its own route map
+  from the stops in each day.
 
 ## Adding a day
 
-Create a file in `_posts` named `YYYY-MM-DD-short-title.md` (copy the sample day). In the front matter:
+```powershell
+.\tools\New-TravelDay.ps1 "Colosseum and the Forum" Rome
+```
 
-- `title`, `place` — shown at the top of the page
-- `stops` — each with `name`, `lat`, `lng`, and optional `time` and `note`. They're numbered on the map in order, joined by a dashed line.
+It picks the trip whose dates cover the day (or the only trip), works out the day number, asks for the stops,
+and opens the file. Options: `-Date 2027-05-03`, `-Trip japan-2028`, `-NoStops`, `-Publish` (commit and push for you).
 
-Easiest way to get coordinates: right-click a spot in Google Maps and click the numbers at the top of the menu to copy them.
+Coordinates: right-click a spot in Google Maps and click the numbers at the top of the menu to copy them.
+
+## Adding a blog post
+
+```powershell
+.\tools\New-BlogPost.ps1 "What we packed for five weeks" -Summary "Carry-on only, mostly."
+```
+
+Same `-Date`, `-Publish` and `-NoEdit` options.
 
 ## Posting days late
 
-`future: false` in `_config.yml` means a post dated in the future won't appear until that date. You can push a few days ahead
-and they'll go live on their own, but **only when the site rebuilds** (on your next push), so a quick push each day is enough.
+`future: false` in `_config.yml` hides anything dated in the future until that date. The site only rebuilds when you push,
+so a post dated ahead goes live on the first push on or after its date.
 
-Note: the repo is public, so anything you commit (including future-dated days) can be read on GitHub before it shows on the site.
+The repo is public, so anything you commit can be read on GitHub before it shows on the site.
 
-## Previewing locally (optional)
+## Photos
 
-Needs Ruby: `gem install bundler jekyll`, then `jekyll serve --future` and open http://localhost:4000.
-"# av-travel" 
+Resize to about 1600px wide before adding them; full-size phone photos make pages slow on hotel Wi-Fi.
+
+## First-time setup on a new laptop
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+git clone https://github.com/adrianv66/av-travel.git
+```
