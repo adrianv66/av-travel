@@ -10,6 +10,15 @@ hero_title: "Ankor Wat"
 hero_subtitle: "Sunrise"
 hero_image: "/images/hero.jpg"
 
+# Links on the right of the header.
+nav:
+  - title: Trips
+    url: /#trips
+  - title: Blog
+    url: /blog/
+  - title: Tech ↗
+    url: https://tech.amvhome.net
+
 # Each trip's days live in <trip>/_posts/, blog posts in blog/_posts/.
 # The folder becomes the post's category, which is the first part of its address:
 #   mediterranean-2027/_posts/2027-04-29-day-03-colosseum.md -> /mediterranean-2027/day-03-colosseum/
