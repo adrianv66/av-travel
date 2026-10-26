@@ -48,42 +48,56 @@ layout: default
     </div>
     {% endfor %}
   </div>
-  <p class="shelf-caption" id="shelf-caption" aria-live="polite">Pick a book to open a trip.</p>
-  <script>
-    (function () {
-      var cap = document.getElementById('shelf-caption');
-      if (!cap) return;
+  <p class="shelf-caption" data-caption aria-live="polite">Pick a book to open a trip.</p>
+</section>
+
+{% assign blog_posts = site.categories.blog %}
+{% if blog_posts and blog_posts.size > 0 %}
+{% assign paper_colors = "#efe4cf,#dfe7df,#e9dcd2,#dde3ec,#f1e6c4,#e6dbe6" | split: "," %}
+{% assign paper_heights = "214,226,206,220,210,230" | split: "," %}
+<section id="blog">
+  <h2>From the blog</h2>
+  <div class="bookshelf paperbacks">
+    {% for post in blog_posts limit: 24 %}
+    {%- assign i = forloop.index0 | modulo: 6 -%}
+    {%- assign words = post.content | number_of_words -%}
+    {%- assign spine_w = words | divided_by: 40 | plus: 30 -%}
+    {%- if spine_w > 54 %}{% assign spine_w = 54 %}{% endif -%}
+    {%- capture post_date %}{{ post.date | date: "%-d %b %Y" }}{% endcapture -%}
+    <div class="book-slot">
+      <a class="book paperback" href="{{ post.url | relative_url }}"
+         style="--spine: {{ post.spine_color | default: paper_colors[i] }}; --h: {{ paper_heights[i] }}px; --w: {{ spine_w }}px;"
+         aria-label="{{ post.title }}, {{ post_date }}"
+         data-title="{{ post.title | escape }}"
+         data-dates="{{ post_date }}"
+         data-summary="{{ post.summary | escape }}">
+        <span class="book-title">{{ post.title }}</span>
+        <span class="book-year">{{ post.date | date: "%Y" }}</span>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="shelf-caption" data-caption aria-live="polite">Pick a paperback to read a post. <a href="{{ '/blog/' | relative_url }}">All posts →</a></p>
+</section>
+{% endif %}
+
+<script>
+  (function () {
+    function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    document.querySelectorAll('.bookshelf').forEach(function (shelf) {
+      var cap = shelf.nextElementSibling;
+      if (!cap || !cap.hasAttribute('data-caption')) return;
       var initial = cap.innerHTML;
-      function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
       function show(b) {
         cap.innerHTML = '<strong>' + esc(b.dataset.title) + '</strong> · ' + esc(b.dataset.dates) +
           (b.dataset.summary ? '<br><span>' + esc(b.dataset.summary) + '</span>' : '') +
           (b.dataset.count ? '<br><span class="shelf-count">' + esc(b.dataset.count) + '</span>' : '');
       }
-      document.querySelectorAll('.book').forEach(function (b) {
+      shelf.querySelectorAll('.book').forEach(function (b) {
         b.addEventListener('mouseenter', function () { show(b); });
         b.addEventListener('focus', function () { show(b); });
       });
-      document.querySelector('.bookshelf').addEventListener('mouseleave', function () { cap.innerHTML = initial; });
-    })();
-  </script>
-</section>
-
-{% assign blog_posts = site.categories.blog %}
-{% if blog_posts and blog_posts.size > 0 %}
-<section>
-  <h2>From the blog</h2>
-  <ul class="post-list">
-    {% for post in blog_posts limit: 3 %}
-    <li>
-      <a href="{{ post.url | relative_url }}">
-        <span class="post-title">{{ post.title }}</span>
-        <span class="post-date">{{ post.date | date: "%-d %b %Y" }}</span>
-        {% if post.summary %}<span class="post-summary">{{ post.summary }}</span>{% endif %}
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
-  <p><a href="{{ '/blog/' | relative_url }}">All posts →</a></p>
-</section>
-{% endif %}
+      shelf.addEventListener('mouseleave', function () { cap.innerHTML = initial; });
+    });
+  })();
+</script>
