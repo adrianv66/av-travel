@@ -1,10 +1,21 @@
 ---
 layout: default
 ---
-<section class="intro">
-  <h1>{{ site.title }}</h1>
-  <p class="lead">{{ site.description }}</p>
+{%- assign hero_title = site.hero_title | default: site.title -%}
+{%- assign hero_subtitle = site.hero_subtitle | default: site.description -%}
+{%- if site.hero_image and site.hero_image != "" -%}
+<section class="hero" style="--hero: url('{{ site.hero_image | relative_url }}');">
+  <div class="hero-text">
+    <h1>{{ hero_title }}</h1>
+    <p>{{ hero_subtitle }}</p>
+  </div>
 </section>
+{%- else -%}
+<section class="intro">
+  <h1>{{ hero_title }}</h1>
+  <p class="lead">{{ hero_subtitle }}</p>
+</section>
+{%- endif -%}
 
 <section id="trips">
   <h2>Trips</h2>

@@ -1,8 +1,14 @@
-title: AV-Travel
-description: Our trips, day by day
+title: Ady and Mich Travelling the World
+description: Our travels, Our experiences, day by day
 url: "https://travel.amvhome.net"
 baseurl: ""
 timezone: Australia/Sydney
+
+# Front page banner. Leave hero_title / hero_subtitle blank to use title / description above.
+# hero_image: a wide landscape photo in /images, about 2000px wide, e.g. /images/hero.jpg (blank = no photo).
+hero_title: "Ankor Wat"
+hero_subtitle: "Sunrise"
+hero_image: "/images/hero.jpg"
 
 # Each trip's days live in <trip>/_posts/, blog posts in blog/_posts/.
 # The folder becomes the post's category, which is the first part of its address:

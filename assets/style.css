@@ -185,3 +185,27 @@ h2 { font-size: 1.25rem; margin-top: 36px; }
   .book { height: calc(var(--h) - 40px); }
   .book-title { font-size: .85rem; max-height: calc(var(--h) - 110px); }
 }
+
+/* ---- Front page photo banner ---- */
+.hero {
+  position: relative;
+  min-height: 340px;
+  margin: -8px 0 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: #3a3a3a var(--hero) center / cover no-repeat;
+  box-shadow: 0 6px 20px rgba(0,0,0,.18);
+}
+.hero::after {   /* darkens the bottom of the photo so the words stay readable */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.62) 0%, rgba(0,0,0,.25) 45%, rgba(0,0,0,0) 75%);
+}
+.hero-text { position: relative; z-index: 1; padding: 28px 30px; color: #fff; }
+.hero-text h1 { font-size: 2.6rem; margin: 0 0 6px; text-shadow: 0 2px 10px rgba(0,0,0,.35); }
+.hero-text p { margin: 0; font-size: 1.15rem; opacity: .92; text-shadow: 0 1px 6px rgba(0,0,0,.4); }
+@media (max-width: 520px) {
+  .hero { min-height: 240px; border-radius: 10px; }
+  .hero-text { padding: 20px; }
+  .hero-text h1 { font-size: 1.9rem; }
+}
